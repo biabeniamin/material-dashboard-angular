@@ -1,5 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import * as Chartist from 'chartist';
+import { log } from 'util';
+import { Injectable } from '@angular/core';
+import { Http, Response} from "@angular/http";
+import { Observable } from "rxjs";
+import { IntervalObservable } from "rxjs/observable/IntervalObservable";
+import 'rxjs/add/operator/takeWhile';
+import { MyExampleService2 } from "../my-example.service";
+
+import {HttpClient} from '@angular/common/http';
+export interface SensorsValue {
+  Temperature : number;
+  Humidity : number;
+}
 
 @Component({
   selector: 'app-dashboard',
@@ -8,143 +21,174 @@ import * as Chartist from 'chartist';
 })
 export class DashboardComponent implements OnInit {
 
-  constructor() { }
-  startAnimationForLineChart(chart){
-      let seq: any, delays: any, durations: any;
-      seq = 0;
-      delays = 80;
-      durations = 500;
+  public temperature : number = 22;
+  public humidity : number = 48;
 
-      chart.on('draw', function(data) {
-        if(data.type === 'line' || data.type === 'area') {
-          data.element.animate({
-            d: {
-              begin: 600,
-              dur: 700,
-              from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(),
-              to: data.path.clone().stringify(),
-              easing: Chartist.Svg.Easing.easeOutQuint
-            }
-          });
-        } else if(data.type === 'point') {
-              seq++;
-              data.element.animate({
-                opacity: {
-                  begin: seq * delays,
-                  dur: durations,
-                  from: 0,
-                  to: 1,
-                  easing: 'ease'
-                }
-              });
-          }
-      });
+  private alive: boolean; 
 
-      seq = 0;
+
+  private temperatureHistory : number[];
+  private humidityHistory : number[];
+  private temperatureHistoryLabels : string[];
+
+  constructor(private http: HttpClient) { 
+    this.alive = true;
+    this.temperatureHistory = [22,22,22,22,22,22,22];
+    this.humidityHistory = [48,48,48,48,48,48,48];
+    this.temperatureHistoryLabels = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+    
+  }
+
+  getSensorsValue() {
+
+    //return this.http.get<SensorsValue[]>("http://192.168.0.100:81/index.php");
+    return this.http.get<SensorsValue[]>("http://192.168.0.107/getTemperature.php");
+
+  }
+
+  turnOnLight()
+  {
+    this.http.get("http://192.168.0.107/index.php?cmd=lightOn").subscribe(res => {
+   });
+   log("action 1");
   };
-  startAnimationForBarChart(chart){
-      let seq2: any, delays2: any, durations2: any;
 
-      seq2 = 0;
-      delays2 = 80;
-      durations2 = 500;
-      chart.on('draw', function(data) {
-        if(data.type === 'bar'){
-            seq2++;
+  turnOffLight()
+  {
+    log("action 2");
+    this.http.get("http://192.168.0.107/index.php?cmd=lightOff").subscribe(res => {
+    });;
+  };
+  unlockDoor()
+  {
+    log("action 3");
+    this.http.get("http://192.168.0.107/index.php?cmd=openDoor").subscribe(res => {
+    });;
+  };
+  
+
+  startAnimationForLineChart(chart){
+    let seq: any, delays: any, durations: any;
+    seq = 0;
+    delays = 80;
+    durations = 300;
+
+    chart.on('draw', function(data) {
+      if(data.type === 'line' || data.type === 'area') {
+        data.element.animate({
+          d: {
+            begin: 600,
+            dur: 700,
+            from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(),
+            to: data.path.clone().stringify(),
+            easing: Chartist.Svg.Easing.easeOutQuint
+          }
+        });
+      } else if(data.type === 'point') {
+            seq++;
             data.element.animate({
               opacity: {
-                begin: seq2 * delays2,
-                dur: durations2,
+                begin: seq * delays,
+                dur: durations,
                 from: 0,
                 to: 1,
                 easing: 'ease'
               }
             });
         }
-      });
+    });
 
-      seq2 = 0;
-  };
+    
+
+    seq = 0;
+};
+
+updateTemperature()
+    {
+      const optionsDailySalesChart: any = {
+        lineSmooth: Chartist.Interpolation.cardinal({
+            tension: 0
+        }),
+        low: 20,
+        high: 40, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+        chartPadding: { top: 0, right: 0, bottom: 0, left: 0},
+    }
+
+      
+
+        for(let i = 0;i<this.temperatureHistory.length-1;i++)
+        {
+          this.temperatureHistory[i] = this.temperatureHistory[i + 1];
+        }
+
+        this.temperatureHistory[this.temperatureHistory.length - 1] = this.temperature;
+        //log(new Date().getMinutes().toString());
+
+        const dataDailySalesChart: any = {
+          labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+          series: [
+            this.temperatureHistory
+          ]
+      };
+        var dailySalesChart = new Chartist.Line('#dailySalesChart', dataDailySalesChart, optionsDailySalesChart);
+        this.startAnimationForLineChart(dailySalesChart);
+    };
+
+    updateHumidity()
+    {
+      const optionsDailySalesChart: any = {
+        lineSmooth: Chartist.Interpolation.cardinal({
+            tension: 0
+        }),
+        low: 0,
+        high: 60, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+        chartPadding: { top: 0, right: 0, bottom: 0, left: 0},
+    }
+
+        for(let i = 0;i<this.humidityHistory.length-1;i++)
+        {
+          this.humidityHistory[i] = this.humidityHistory[i + 1];
+        }
+
+        this.humidityHistory[this.humidityHistory.length - 1] = this.humidity;
+
+        const dataDailySalesChart: any = {
+          labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+          series: [
+            this.humidityHistory
+          ]
+      };
+        var dailySalesChart = new Chartist.Line('#humidityHistory', dataDailySalesChart, optionsDailySalesChart);
+        this.startAnimationForLineChart(dailySalesChart);
+    };
+  
   ngOnInit() {
       /* ----------==========     Daily Sales Chart initialization For Documentation    ==========---------- */
 
-      const dataDailySalesChart: any = {
-          labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
-          series: [
-              [12, 17, 7, 17, 23, 18, 38]
-          ]
-      };
+      
 
-     const optionsDailySalesChart: any = {
-          lineSmooth: Chartist.Interpolation.cardinal({
-              tension: 0
-          }),
-          low: 0,
-          high: 50, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-          chartPadding: { top: 0, right: 0, bottom: 0, left: 0},
-      }
+   
 
-      var dailySalesChart = new Chartist.Line('#dailySalesChart', dataDailySalesChart, optionsDailySalesChart);
+    
+    
 
-      this.startAnimationForLineChart(dailySalesChart);
+    
 
+      IntervalObservable.create(3000)
+      .takeWhile(() => true) // only fires when component is alive
+      .subscribe(() => {
 
-      /* ----------==========     Completed Tasks Chart initialization    ==========---------- */
+        this.getSensorsValue().subscribe(res => {
+          this.temperature = res[res.length-1].Temperature;
+          this.humidity = res[res.length-1].Humidity;
+          log(res[res.length-1].Humidity.toString());
+        });
 
-      const dataCompletedTasksChart: any = {
-          labels: ['12p', '3p', '6p', '9p', '12p', '3a', '6a', '9a'],
-          series: [
-              [230, 750, 450, 300, 280, 240, 200, 190]
-          ]
-      };
+        this.updateTemperature();
+        this.updateHumidity();
 
-     const optionsCompletedTasksChart: any = {
-          lineSmooth: Chartist.Interpolation.cardinal({
-              tension: 0
-          }),
-          low: 0,
-          high: 1000, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-          chartPadding: { top: 0, right: 0, bottom: 0, left: 0}
-      }
-
-      var completedTasksChart = new Chartist.Line('#completedTasksChart', dataCompletedTasksChart, optionsCompletedTasksChart);
-
-      // start animation for the Completed Tasks Chart - Line Chart
-      this.startAnimationForLineChart(completedTasksChart);
-
-
-
-      /* ----------==========     Emails Subscription Chart initialization    ==========---------- */
-
-      var datawebsiteViewsChart = {
-        labels: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
-        series: [
-          [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895]
-
-        ]
-      };
-      var optionswebsiteViewsChart = {
-          axisX: {
-              showGrid: false
-          },
-          low: 0,
-          high: 1000,
-          chartPadding: { top: 0, right: 5, bottom: 0, left: 0}
-      };
-      var responsiveOptions: any[] = [
-        ['screen and (max-width: 640px)', {
-          seriesBarDistance: 5,
-          axisX: {
-            labelInterpolationFnc: function (value) {
-              return value[0];
-            }
-          }
-        }]
-      ];
-      var websiteViewsChart = new Chartist.Bar('#websiteViewsChart', datawebsiteViewsChart, optionswebsiteViewsChart, responsiveOptions);
-
-      //start animation for the Emails Subscription Chart
-      this.startAnimationForBarChart(websiteViewsChart);
+      });
+      
   }
 
 }

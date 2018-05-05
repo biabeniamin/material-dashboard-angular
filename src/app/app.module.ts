@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
+
+
 import {
   MatButtonModule,
   MatInputModule,
@@ -24,6 +26,7 @@ import { IconsComponent } from './icons/icons.component';
 import { MapsComponent } from './maps/maps.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { UpgradeComponent } from './upgrade/upgrade.component';
+import { HttpClientModule } from '@angular/common/http';
 import {
   AgmCoreModule
 } from '@agm/core';
@@ -40,6 +43,7 @@ import {
     MatInputModule,
     MatTooltipModule,
     AppRoutingModule,
+    HttpClientModule,
     AgmCoreModule.forRoot({
       apiKey: 'YOUR_GOOGLE_MAPS_API_KEY'
     })

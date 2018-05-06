@@ -6,6 +6,7 @@ import { Http, Response} from "@angular/http";
 import { Observable } from "rxjs";
 import { IntervalObservable } from "rxjs/observable/IntervalObservable";
 import 'rxjs/add/operator/takeWhile';
+import 'rxjs/add/operator/take';
 import { MyExampleService2 } from "../my-example.service";
 
 import {HttpClient} from '@angular/common/http';
@@ -14,16 +15,21 @@ export interface SensorsValue {
   Humidity : number;
 }
 
+interface LightStatusModel {
+  LightStatus: number;
+}
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
+
 export class DashboardComponent implements OnInit {
 
   public temperature : number = 22;
   public humidity : number = 48;
-
+  public state: boolean;
   private alive: boolean; 
 
 
@@ -32,6 +38,7 @@ export class DashboardComponent implements OnInit {
   private temperatureHistoryLabels : string[];
 
   constructor(private http: HttpClient) { 
+    this.getLightStatus();
     this.alive = true;
     this.temperatureHistory = [22,22,22,22,22,22,22];
     this.humidityHistory = [48,48,48,48,48,48,48];
@@ -39,15 +46,27 @@ export class DashboardComponent implements OnInit {
     
   }
 
-  getSensorsValue() {
+  getLightStatus(){
+    this.http.get<LightStatusModel>("http://192.168.0.107/getLightStatus.php").subscribe(s => {
 
+      if(s.LightStatus == 1) 
+        this.state = true;
+      else this.state = false;
+    
+      log(this.state as boolean);
+    });
+  }
+
+  getSensorsValue() {
+    log(this.state as boolean);
     //return this.http.get<SensorsValue[]>("http://192.168.0.100:81/index.php");
-    return this.http.get<SensorsValue[]>("http://192.168.0.107/getTemperature.php");
+     return this.http.get<SensorsValue[]>("http://192.168.0.107/getTemperature.php");
 
   }
 
   turnOnLight()
   {
+    this.state = true;
     this.http.get("http://192.168.0.107/index.php?cmd=lightOn").subscribe(res => {
    });
    log("action 1");
@@ -55,6 +74,7 @@ export class DashboardComponent implements OnInit {
 
   turnOffLight()
   {
+    this.state = false;
     log("action 2");
     this.http.get("http://192.168.0.107/index.php?cmd=lightOff").subscribe(res => {
     });;

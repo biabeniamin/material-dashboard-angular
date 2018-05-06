@@ -97,14 +97,13 @@
                 <div class="col-lg-3 col-md-6 col-sm-6">
                         <div class="card card-stats">
                               <div class="card-header card-header-danger card-header-icon">
-                                <div class="card-icon">
-                                    
+                                <div *ngIf = "state" class="card-icon">
                                     <button (click)="turnOffLight()"  >
                                         <img class="img" src="../assets/img/lightClosed.png" />
                                     </button>
                                   <!--<img href="https://cdn2.iconfinder.com/data/icons/freecns-cumulus/32/519875-84_Thermometer_Full-256.png">-->
-                          </div>
-                          <div class="card-icon">
+                                </div>
+                          <div *ngIf = "!state" class="card-icon">
                             <button (click)="turnOnLight()"  >
                                 <img class="img" src="../assets/img/light.png"  />
                             </button>

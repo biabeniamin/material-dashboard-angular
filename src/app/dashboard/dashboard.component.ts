@@ -47,7 +47,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getLightStatus(){
-    this.http.get<LightStatusModel>("http://192.168.0.107/getLightStatus.php").subscribe(s => {
+    this.http.get<LightStatusModel>("getLightStatus.php").subscribe(s => {
 
       if(s.LightStatus == 1) 
         this.state = true;
@@ -58,16 +58,15 @@ export class DashboardComponent implements OnInit {
   }
 
   getSensorsValue() {
-    log(this.state as boolean);
     //return this.http.get<SensorsValue[]>("http://192.168.0.100:81/index.php");
-     return this.http.get<SensorsValue[]>("http://192.168.0.107/getTemperature.php");
+     return this.http.get<SensorsValue[]>("getTemperature.php");
 
   }
 
   turnOnLight()
   {
     this.state = true;
-    this.http.get("http://192.168.0.107/index.php?cmd=lightOn").subscribe(res => {
+    this.http.get("index.php?cmd=lightOn").subscribe(res => {
    });
    log("action 1");
   };
@@ -76,13 +75,13 @@ export class DashboardComponent implements OnInit {
   {
     this.state = false;
     log("action 2");
-    this.http.get("http://192.168.0.107/index.php?cmd=lightOff").subscribe(res => {
+    this.http.get("index.php?cmd=lightOff").subscribe(res => {
     });;
   };
   unlockDoor()
   {
     log("action 3");
-    this.http.get("http://192.168.0.107/index.php?cmd=openDoor").subscribe(res => {
+    this.http.get("index.php?cmd=openDoor").subscribe(res => {
     });;
   };
   
@@ -201,7 +200,7 @@ updateTemperature()
         this.getSensorsValue().subscribe(res => {
           this.temperature = res[res.length-1].Temperature;
           this.humidity = res[res.length-1].Humidity;
-          log(res[res.length-1].Humidity.toString());
+          log(res[res.length-1].Temperature.toString());
         });
 
         this.updateTemperature();

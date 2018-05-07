@@ -20,7 +20,7 @@ export class TableListComponent implements OnInit {
   getLog() {
 
     //return this.http.get<Log[]>("http://192.168.0.100:81/getLog.php");
-    return this.http.get<Log[]>("http://192.168.0.107/getLog.php");
+    return this.http.get<Log[]>("getLog.php");
 
   }
 

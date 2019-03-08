@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { IconsComponent } from './icons.component';
+import { DecryptSoundComponent } from './decrypt-sound.component';
 
-describe('IconsComponent', () => {
-  let component: IconsComponent;
-  let fixture: ComponentFixture<IconsComponent>;
+describe('DecryptSoundComponent', () => {
+  let component: DecryptSoundComponent;
+  let fixture: ComponentFixture<DecryptSoundComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ IconsComponent ]
+      declarations: [ DecryptSoundComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(IconsComponent);
+    fixture = TestBed.createComponent(DecryptSoundComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

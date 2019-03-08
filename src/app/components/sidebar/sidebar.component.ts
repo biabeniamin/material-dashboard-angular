@@ -13,6 +13,7 @@ export const ROUTES: RouteInfo[] = [
     { path: 'table-list', title: 'Notifications',  icon:'notifications', class: '' },
     { path: 'typography', title: 'Live stream',  icon:'library_books', class: '' },
     { path: 'icons', title: 'Motion captured',  icon:'bubble_chart', class: '' },
+    { path: 'generator', title: 'Generate keys',  icon:'bubble_chart', class: '' },
 ];
 
 @Component({

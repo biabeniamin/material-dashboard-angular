@@ -30,6 +30,7 @@ import { HttpClientModule } from '@angular/common/http';
 import {
   AgmCoreModule
 } from '@agm/core';
+import { GeneratorComponent } from './generator/generator.component';
 
 @NgModule({
   imports: [
@@ -58,6 +59,7 @@ import {
     MapsComponent,
     NotificationsComponent,
     UpgradeComponent,
+    GeneratorComponent,
 
   ],
   providers: [],

@@ -31,6 +31,7 @@ import {
   AgmCoreModule
 } from '@agm/core';
 import { GeneratorComponent } from './generator/generator.component';
+import { EncryptImageComponent } from './encrypt-image/encrypt-image.component';
 
 @NgModule({
   imports: [
@@ -60,6 +61,7 @@ import { GeneratorComponent } from './generator/generator.component';
     NotificationsComponent,
     UpgradeComponent,
     GeneratorComponent,
+    EncryptImageComponent,
 
   ],
   providers: [],

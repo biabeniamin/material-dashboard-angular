@@ -14,6 +14,7 @@ export const ROUTES: RouteInfo[] = [
     { path: 'typography', title: 'Live stream',  icon:'library_books', class: '' },
     { path: 'icons', title: 'Motion captured',  icon:'bubble_chart', class: '' },
     { path: 'generator', title: 'Generate keys',  icon:'bubble_chart', class: '' },
+    { path: 'encrypt-image', title: 'Encrypt in image',  icon:'bubble_chart', class: '' },
 ];
 
 @Component({

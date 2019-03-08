@@ -12,6 +12,7 @@ import { MapsComponent } from './maps/maps.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { UpgradeComponent } from './upgrade/upgrade.component';
 import { GeneratorComponent } from './generator/generator.component';
+import { EncryptImageComponent } from './encrypt-image/encrypt-image.component';
 
 const routes: Routes =[
     { path: 'dashboard',      component: DashboardComponent },
@@ -23,6 +24,7 @@ const routes: Routes =[
     { path: 'notifications',  component: NotificationsComponent },
     { path: 'upgrade',        component: UpgradeComponent },
     { path: 'generator',        component: GeneratorComponent },
+    { path: 'encrypt-image',        component: EncryptImageComponent },
     { path: '',               redirectTo: 'dashboard', pathMatch: 'full' }
 ];
 
